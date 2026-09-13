@@ -156,29 +156,91 @@ If you find Detect Web Technology helpful, please leave a 5-star rating on the C
 
 ---
 
-## 3. Permissions Justifications
+## 3. Single Purpose & Permissions Justifications (Chrome Web Store Privacy Tab)
 
-| Permission                                       | Technical Reason & User Benefit                                                                                                           |
-| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `activeTab`                                      | Required to scan the DOM, scripts, stylesheets, and meta tags of the currently active tab when the user opens the extension popup.        |
-| `scripting`                                      | Required to inject the lightweight technology detection script into web pages that were opened before the extension was loaded.           |
-| `storage`                                        | Used locally to store the user's preferred theme (Dark/Light mode) and session-level header detections.                                   |
-| `tabs`                                           | Needed to retrieve the current tab URL and hostname so technologies can be associated with the active website.                            |
-| `webRequest`                                     | Used to inspect response headers (`Server`, `X-Powered-By`, `CF-Ray`, `Via`) to identify server technology, CDNs, and backend frameworks. |
-| `host_permissions` (`http://*/*`, `https://*/*`) | Allows the detector to inspect and analyze technology stacks on any visited web page upon user request.                                   |
+### Single Purpose Description (0/1,000 characters)
+
+```text
+Detects and displays the web technologies, frameworks, CMS platforms, and server software powering the active website.
+```
+
+### Permission Justifications (0/1,000 characters each)
+
+#### `activeTab` justification
+
+```text
+Used to inspect the DOM structure, script tags, stylesheets, and meta elements of the current active webpage only when the user explicitly clicks the extension icon. This enables on-demand technology analysis without requiring persistent, background access to the user's browsing activity.
+```
+
+#### `scripting` justification
+
+```text
+Used via chrome.scripting.executeScript to dynamically inject the client-side technology detection scripts into web pages that were already opened prior to the extension being installed or updated, ensuring technology detection functions immediately without requiring a manual page refresh.
+```
+
+#### `storage` justification
+
+```text
+Used strictly client-side on the user's local device to persist user interface settings (such as Dark/Light theme mode and scanner pause/resume state) via chrome.storage.local, and to temporarily cache detected HTTP response headers for the active tab via chrome.storage.session. No stored data is synchronized to cloud servers or shared externally.
+```
+
+#### `tabs` justification
+
+```text
+Used to query the active tab's URL and title to display the analyzed website's domain in the extension popup header, verify that the current tab is a supported HTTP/HTTPS website rather than an internal browser page (e.g., chrome://), and update the extension toolbar icon badge counter with the count of detected technologies.
+```
+
+#### `webRequest` justification
+
+```text
+Used via chrome.webRequest.onHeadersReceived to read passive HTTP response headers (such as Server, X-Powered-By, CF-Ray, and Via) of visited websites. This allows the extension to detect backend web servers, caching layers, and CDNs that are not identifiable through frontend DOM or JavaScript globals. The extension only inspects public header names and values; no request payloads or sensitive credentials are read or stored.
+```
+
+#### Host permission justification (`http://*/*`, `https://*/*`)
+
+```text
+Required to allow the extension's content scripts and response header listeners to inspect technology signatures across standard public HTTP and HTTPS websites that the user browses. This broad pattern (http://*/* and https://*/*) is essential because the extension functions as a general-purpose website technology detector for any public webpage visited by the user. All analysis is performed client-side on the user's device with zero external data transmission.
+```
 
 ---
 
-## 4. Privacy & Data Handling Disclosure
+## 4. Remote Code & Data Usage Declarations
 
-- **Does this extension collect user data?** No.
-- **Does this extension transmit data to external servers?** No. All detection analysis happens strictly inside the user's local browser environment.
-- **Does this extension sell or monetize personal information?** No.
+### Are you using remote code?
 
-### Official Privacy Policy Template
+- **Option to select:** `No, I am not using Remote code`
+- **Justification (if requested):**
 
-> **Privacy Policy for Detect Web Technology**
-> Detect Web Technology ("the Extension") is committed to protecting your privacy. The Extension does not collect, record, track, transmit, or sell any personal information or web browsing history. All technology detection analysis is executed purely client-side on your local device.
+```text
+All JavaScript code, CSS styles, icons, and technology detection signature libraries are fully bundled directly within the extension package. The extension does not load scripts from external CDNs, does not fetch or execute remote code, and does not evaluate arbitrary strings via eval().
+```
+
+### Data Usage Disclosures
+
+**What user data do you plan to collect from users now or in the future?**
+
+- Personally identifiable information: **Unchecked (No)**
+- Health information: **Unchecked (No)**
+- Financial and payment information: **Unchecked (No)**
+- Authentication information: **Unchecked (No)**
+- Personal communications: **Unchecked (No)**
+- Location: **Unchecked (No)**
+- Web history: **Unchecked (No)**
+- User activity: **Unchecked (No)**
+- Website content: **Unchecked (No)**
+
+_(Note: Detect Web Technology does not collect, store, or transmit any user data. All processing occurs strictly client-side on the user's device)._
+
+**Certifications (All 3 required):**
+
+- [x] I do not sell or transfer user data to third parties, outside of the approved use cases
+- [x] I do not use or transfer user data for purposes that are unrelated to my item's single purpose
+- [x] I do not use or transfer user data to determine creditworthiness or for lending purposes
+
+### Privacy Policy URL (Chrome Web Store Field)
+
+- **GitHub Repository Policy Anchor:** `https://github.com/sahedalomsumit/detect-web-technology#privacy-policy`
+- **Developer Website:** `https://sahedalomsumit.com`
 
 ---
 
@@ -187,12 +249,14 @@ If you find Detect Web Technology helpful, please leave a 5-star rating on the C
 All assets are located in [`store-assets/`](file:///d:/pCloud-laptop/github/detect-web-technology/store-assets) and are strictly formatted as **24-bit RGB PNG (no alpha)** and **95% High-Quality JPEG**:
 
 ### Store Icons
+
 - [x] **Icon 16×16px**: `icons/icon-16.png`
 - [x] **Icon 32×32px**: `icons/icon-32.png`
 - [x] **Icon 48×48px**: `icons/icon-48.png`
 - [x] **Icon 128×128px**: `icons/icon-128.png`
 
 ### Store Screenshots (1280×800, 24-bit PNG & JPEG, No Alpha)
+
 - [x] **Screenshot 1 — Overview & Instant Detection**: `store-assets/screenshot-1-overview.png` (`.jpg`)
 - [x] **Screenshot 2 — Frameworks & Version Tags**: `store-assets/screenshot-2-frameworks-versions.png` (`.jpg`)
 - [x] **Screenshot 3 — Page Builders & E-Commerce**: `store-assets/screenshot-3-ecosystem-plugins.png` (`.jpg`)
@@ -200,6 +264,7 @@ All assets are located in [`store-assets/`](file:///d:/pCloud-laptop/github/dete
 - [x] **Screenshot 5 — 100% Client-Side Privacy**: `store-assets/screenshot-5-privacy-controls.png` (`.jpg`)
 
 ### Promo Tiles (24-bit PNG & JPEG, No Alpha)
+
 - [x] **Small Promo Tile (440×280)**: `store-assets/small-promo-tile-440x280.png` (`.jpg`)
 - [x] **Marquee Promo Tile (1400×560)**: `store-assets/marquee-promo-tile-1400x560.png` (`.jpg`)
 
@@ -208,6 +273,7 @@ All assets are located in [`store-assets/`](file:///d:/pCloud-laptop/github/dete
 ## 6. Global Assets: Global Promo Video
 
 In the Chrome Web Store Developer Dashboard under **Store listing > Global assets**:
+
 - **Field Name**: `Promo video` or `Global promo video`
 - **Requirement**: **Optional** (Upload the generated video to YouTube as Unlisted or Public, then paste the URL into the dashboard).
 - **Generated Video Files Ready for Upload**:
@@ -220,11 +286,13 @@ In the Chrome Web Store Developer Dashboard under **Store listing > Global asset
 ### Ready-to-Use YouTube Listing Metadata
 
 **Video Title:**
+
 ```text
 Detect Web Technology — Instant Website Tech Stack Profiler (Chrome Extension Demo)
 ```
 
 **Video Description:**
+
 ```text
 Instantly uncover the complete technology stack powering any website with a single click.
 
@@ -244,19 +312,20 @@ Developer: https://sahedalomsumit.com
 ```
 
 **YouTube Tags:**
+
 ```text
 chrome extension, tech stack detector, wappalyzer alternative, website profiler, web development, detect web technology, developer tools, react, wordpress, tailwind css, cloudflare
 ```
 
 ### 45-Second Promo Video Storyboard & Script
 
-| Time | Visual on Screen | Voiceover / Action Text |
-| :--- | :--- | :--- |
-| **0:00 – 0:08** | Open browser on a popular website (e.g. a modern e-commerce or tech blog). | *"Ever wonder what technologies, frameworks, or CMS power your favorite websites?"* |
-| **0:08 – 0:18** | Click the **Detect Web Technology** icon in the toolbar. The popup animates open instantaneously (<40ms). | *"Meet Detect Web Technology. With just one click, instantly reveal the entire technology stack in real time."* |
-| **0:18 – 0:28** | Mouse hovers over detected categories: **WordPress 7.1**, **React 18.3.1**, **Tailwind CSS**, **Cloudflare**, and **WooCommerce**. Point out confidence scores (85% sure). | *"Get exact release versions and multi-vector confidence scores across 180+ technologies."* |
-| **0:28 – 0:38** | Click the **"Copy"** button in the header. Open a Notion document or text editor and paste the clean Markdown report. | *"Export organized Markdown reports directly to your clipboard in one click — perfect for client audits and documentation."* |
-| **0:38 – 0:45** | Click the theme toggle (Dark/Light mode), show the pause toggle, and display the extension logo. | *"100% private. Zero remote servers. No tracking. Install Detect Web Technology for Chrome today."* |
+| Time            | Visual on Screen                                                                                                                                                           | Voiceover / Action Text                                                                                                      |
+| :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| **0:00 – 0:08** | Open browser on a popular website (e.g. a modern e-commerce or tech blog).                                                                                                 | _"Ever wonder what technologies, frameworks, or CMS power your favorite websites?"_                                          |
+| **0:08 – 0:18** | Click the **Detect Web Technology** icon in the toolbar. The popup animates open instantaneously (<40ms).                                                                  | _"Meet Detect Web Technology. With just one click, instantly reveal the entire technology stack in real time."_              |
+| **0:18 – 0:28** | Mouse hovers over detected categories: **WordPress 7.1**, **React 18.3.1**, **Tailwind CSS**, **Cloudflare**, and **WooCommerce**. Point out confidence scores (85% sure). | _"Get exact release versions and multi-vector confidence scores across 180+ technologies."_                                  |
+| **0:28 – 0:38** | Click the **"Copy"** button in the header. Open a Notion document or text editor and paste the clean Markdown report.                                                      | _"Export organized Markdown reports directly to your clipboard in one click — perfect for client audits and documentation."_ |
+| **0:38 – 0:45** | Click the theme toggle (Dark/Light mode), show the pause toggle, and display the extension logo.                                                                           | _"100% private. Zero remote servers. No tracking. Install Detect Web Technology for Chrome today."_                          |
 
 ---
 
@@ -269,4 +338,3 @@ chrome extension, tech stack detector, wappalyzer alternative, website profiler,
 - **Performance Optimized**: Sub-40ms execution time, lazy HTML DOM evaluation, resource request filtering, and DocumentFragment batch rendering.
 - **Privacy Hardened**: Zero web-accessible resources exposed, preventing website fingerprinting. 100% client-side execution with zero external network tracking.
 - **Modern UI**: Two-column category bento grid, dark & light mode, brand SVG icons, and 1-click Markdown stack exporter.
-

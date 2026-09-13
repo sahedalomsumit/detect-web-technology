@@ -196,6 +196,7 @@ Detect Web Technology is engineered with privacy as a foundational principle:
 - **No Data Harvesting**: Browsing history, visited URLs, page contents, and cookies are never stored permanently or transmitted off your machine.
 - **Fingerprinting Protection**: Extension scripts are completely private; no public web-accessible resources are exposed to foreign web pages.
 - **Strict CSP Compliance**: Does not use `eval()`, `new Function()`, or inline scripts.
+- **Privacy Policy**: Read our complete privacy policy and permissions breakdown in [CHROMEWEBSTORE.md](CHROMEWEBSTORE.md#official-privacy-policy-content-complete-text).
 
 ---
 

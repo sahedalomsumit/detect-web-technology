@@ -126,13 +126,34 @@
     } catch (e) {
       // Ignore
     }
-    // Also modulepreload and preload links (Vite, Next, Webpack)
-    const preloads = document.querySelectorAll('link[rel="modulepreload"], link[rel="preload"][as="script"], link[rel="prefetch"]');
+    // Also modulepreload, preload, prefetch, preconnect and dns-prefetch links
+    const preloads = document.querySelectorAll('link[rel="modulepreload"], link[rel="preload"], link[rel="prefetch"], link[rel="preconnect"], link[rel="dns-prefetch"]');
     for (const p of preloads) {
       const href = p.getAttribute('href');
       if (href) resources.push(href);
     }
     return resources;
+  }
+
+  function getStorageKeys() {
+    const keys = [];
+    try {
+      if (window.localStorage && window.localStorage.length > 0) {
+        for (let i = 0; i < window.localStorage.length; i++) {
+          const k = window.localStorage.key(i);
+          if (k) keys.push(k);
+        }
+      }
+    } catch (e) {}
+    try {
+      if (window.sessionStorage && window.sessionStorage.length > 0) {
+        for (let i = 0; i < window.sessionStorage.length; i++) {
+          const k = window.sessionStorage.key(i);
+          if (k) keys.push(k);
+        }
+      }
+    } catch (e) {}
+    return keys;
   }
 
   let cachedHtmlSample = null;
@@ -173,6 +194,7 @@
     const iframes = getIframes();
     const resources = getLoadedResources();
     const cookies = document.cookie || '';
+    const storageKeys = getStorageKeys();
 
     const detectedMap = new Map();
 
@@ -321,6 +343,19 @@
               break;
             }
           } catch (e) {}
+        }
+      }
+
+      // 9. Check Browser Storage (localStorage & sessionStorage keys)
+      if (tech.detect.storage && storageKeys.length > 0) {
+        for (const storageRule of tech.detect.storage) {
+          for (const key of storageKeys) {
+            if (storageRule.test(key)) {
+              detectionMatches.push('Browser Storage');
+              break;
+            }
+          }
+          if (detectionMatches.includes('Browser Storage')) break;
         }
       }
 

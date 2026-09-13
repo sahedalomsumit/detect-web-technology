@@ -2173,8 +2173,46 @@ const TECHNOLOGIES = [
     icon: 'supabase',
     description: 'Open source Firebase alternative with Postgres database, Auth, and Edge Functions.',
     detect: {
-      scripts: [/@supabase\/supabase-js/i, /cdn\.jsdelivr\.net\/npm\/@supabase/i],
-      js: [{ property: 'supabase' }]
+      scripts: [
+        /@supabase\/(?:supabase-js|ssr|auth-helpers|auth-ui)(?:@([0-9.]+))?/i,
+        /supabase(?:-js)?(?:\.min)?\.js(?:[?#]|$)/i,
+        /cdn\.jsdelivr\.net\/npm\/@supabase/i,
+        /esm\.sh\/@supabase/i,
+        /unpkg\.com\/@supabase/i,
+        /[a-z0-9_-]+\.supabase\.(?:co|in)/i,
+        /supabase\.(?:co|com)\/(?:rest|auth|storage|functions|realtime|api)/i
+      ],
+      js: [
+        { property: 'supabase' },
+        { property: '_supabase' },
+        { property: '__SUPABASE__' },
+        { property: 'supabaseClient' },
+        { property: '_supabaseClient' }
+      ],
+      html: [
+        /[a-z0-9_-]+\.supabase\.(?:co|in)/i,
+        /NEXT_PUBLIC_SUPABASE_URL/i,
+        /NEXT_PUBLIC_SUPABASE_ANON_KEY/i,
+        /VITE_SUPABASE_URL/i,
+        /VITE_SUPABASE_ANON_KEY/i,
+        /data-supabase/i,
+        /supabase\.co\/(?:rest|auth|storage|functions)/i
+      ],
+      cookies: [
+        /sb-[a-z0-9_-]+-auth-token/i,
+        /supabase[-_]auth[-_]token/i,
+        /sb:[a-z0-9_-]+:token/i,
+        /sb-access-token/i,
+        /sb-refresh-token/i
+      ],
+      storage: [
+        /sb-[a-z0-9_-]+-auth-token/i,
+        /supabase\.auth\.token/i,
+        /sb:[a-z0-9_-]+:token/i,
+        /sb-provider-token/i,
+        /sb-refresh-token/i,
+        /^supabase/i
+      ]
     }
   },
   {

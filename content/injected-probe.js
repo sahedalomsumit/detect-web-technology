@@ -190,7 +190,11 @@
       { id: 'datadog', prop: 'DD_LOGS' },
 
       // BaaS
-      { id: 'supabase', prop: 'supabase' },
+      { id: 'supabase', prop: 'supabase', verProp: 'supabase.supabaseVersion' },
+      { id: 'supabase', prop: '_supabase' },
+      { id: 'supabase', prop: '__SUPABASE__' },
+      { id: 'supabase', prop: 'supabaseClient' },
+      { id: 'supabase', prop: '_supabaseClient' },
       { id: 'firebase', prop: 'firebase', verProp: 'firebase.SDK_VERSION' },
 
       // JavaScript Libraries & Utilities
@@ -281,6 +285,50 @@
             const ver = el._gsap && el._gsap.version ? String(el._gsap.version) : null;
             results.push({ id: 'gsap', property: 'element._gsap', version: ver });
             break;
+          }
+        }
+      }
+    } catch (e) {
+      // Quiet fail
+    }
+
+    // Deep Supabase inspection (handles bundled ES modules, Next.js hydration, auth storage)
+    try {
+      if (!results.some(r => r.id === 'supabase')) {
+        for (const key of Object.getOwnPropertyNames(window)) {
+          if (/^supabase/i.test(key) && window[key]) {
+            const val = window[key];
+            const ver = val && (val.supabaseVersion || val.version) ? String(val.supabaseVersion || val.version) : null;
+            results.push({ id: 'supabase', property: `window.${key}`, version: ver });
+            break;
+          }
+        }
+      }
+
+      if (!results.some(r => r.id === 'supabase')) {
+        try {
+          if (window.localStorage) {
+            for (let i = 0; i < window.localStorage.length; i++) {
+              const k = window.localStorage.key(i);
+              if (k && (/^sb-[a-z0-9_-]+-auth-token/i.test(k) || /^supabase/i.test(k))) {
+                results.push({ id: 'supabase', property: `localStorage(${k})` });
+                break;
+              }
+            }
+          }
+        } catch (e) {}
+      }
+
+      if (!results.some(r => r.id === 'supabase')) {
+        if (window.__NEXT_DATA__) {
+          const str = JSON.stringify(window.__NEXT_DATA__);
+          if (str.includes('.supabase.co') || str.includes('NEXT_PUBLIC_SUPABASE')) {
+            results.push({ id: 'supabase', property: '__NEXT_DATA__(supabase)' });
+          }
+        } else if (window.__NUXT__) {
+          const str = JSON.stringify(window.__NUXT__);
+          if (str.includes('.supabase.co') || str.includes('supabase')) {
+            results.push({ id: 'supabase', property: '__NUXT__(supabase)' });
           }
         }
       }

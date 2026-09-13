@@ -38,6 +38,7 @@
   // More Info Elements
   const infoHostname = document.getElementById('infoHostname');
   const infoTotalTechs = document.getElementById('infoTotalTechs');
+  const appVersion = document.getElementById('appVersion');
 
   // Brand SVG Icons
   const BRAND_ICONS = {
@@ -152,6 +153,7 @@
   // Initialization
   // ==========================================
   document.addEventListener('DOMContentLoaded', async () => {
+    initAppVersion();
     await initSettings();
     setupEventListeners();
     if (isScannerActive) {
@@ -160,6 +162,19 @@
       showDisabled();
     }
   });
+
+  function initAppVersion() {
+    try {
+      if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getManifest) {
+        const manifest = chrome.runtime.getManifest();
+        if (manifest && manifest.version && appVersion) {
+          appVersion.textContent = `v${manifest.version}`;
+        }
+      }
+    } catch (e) {
+      // Fallback to static text in HTML
+    }
+  }
 
   // ==========================================
   // Settings & Theme Management

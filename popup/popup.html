@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detect Web Technology</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-window">
+    <!-- Top Purple Header -->
+    <header class="top-nav">
+      <div class="brand-box">
+        <div class="brand-logo">
+          <svg viewBox="0 0 32 32" fill="none" class="brand-svg">
+            <path d="M16 2L30 10V22L16 30L2 22V10L16 2Z" fill="#ffffff" />
+            <path d="M16 5L27 11.5V20.5L16 27L5 20.5V11.5L16 5Z" fill="#490899" />
+            <path d="M10 12L13 21L16 14L19 21L22 12" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <span class="brand-name">Detect Web Technology</span>
+      </div>
+
+      <div class="top-controls">
+        <!-- Enable/Disable Switch -->
+        <label class="switch" title="Toggle scanner active">
+          <input type="checkbox" id="scannerActiveToggle" checked>
+          <span class="slider"></span>
+        </label>
+
+        <!-- Rescan / Refresh -->
+        <button id="rescanBtn" class="nav-icon-btn" title="Re-scan page" aria-label="Re-scan">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+          </svg>
+        </button>
+
+        <!-- Theme Toggle (Moon / Sun) -->
+        <button id="themeToggleBtn" class="nav-icon-btn" title="Toggle dark / light theme" aria-label="Theme toggle">
+          <svg class="theme-icon moon-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <svg class="theme-icon sun-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sub Navigation Tabs Bar -->
+    <div class="sub-nav">
+      <div class="nav-tabs">
+        <button class="nav-tab active" id="tabTechnologiesBtn">TECHNOLOGIES</button>
+        <button class="nav-tab" id="tabMoreInfoBtn">MORE INFO</button>
+      </div>
+
+      <div class="sub-nav-actions">
+        <button id="copyBtn" class="copy-btn" title="Copy markdown summary">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+          <span>Copy</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="main-body" id="mainBody">
+      <!-- 1. TECHNOLOGIES VIEW -->
+      <section id="technologiesView" class="view-panel active-panel">
+        <!-- Search bar (subtle) -->
+        <div class="search-wrap">
+          <svg class="search-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" id="filterInput" placeholder="Filter technologies..." spellcheck="false" autocomplete="off" />
+          <button id="clearFilterBtn" class="clear-btn" style="display: none;">&times;</button>
+        </div>
+
+        <!-- Loading state -->
+        <div id="loadingView" class="status-center">
+          <div class="spinner"></div>
+          <p class="status-msg">Analyzing web technologies...</p>
+        </div>
+
+        <!-- Empty state -->
+        <div id="emptyView" class="status-center" style="display: none;">
+          <div class="empty-brand-wrap">
+            <svg viewBox="0 0 32 32" fill="none" class="empty-brand-svg" width="44" height="44">
+              <path d="M16 2L30 10V22L16 30L2 22V10L16 2Z" fill="#ffffff" />
+              <path d="M16 5L27 11.5V20.5L16 27L5 20.5V11.5L16 5Z" fill="#490899" />
+              <path d="M10 12L13 21L16 14L19 21L22 12" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <p class="status-title" id="emptyTitle">No technologies detected</p>
+          <p class="status-msg" id="emptyDesc">No recognized framework or CMS signatures found on this page.</p>
+        </div>
+
+        <!-- Disabled state -->
+        <div id="disabledView" class="status-center" style="display: none;">
+          <div class="disabled-icon-wrap">
+            <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="disabled-icon-svg">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+            </svg>
+          </div>
+          <p class="status-title">Scanner is Disabled</p>
+          <p class="status-msg">Detection is paused. Turn on the toggle in the header to re-enable web technology scanning.</p>
+          <button id="enableScannerBtn" class="enable-scanner-btn">Enable Scanner</button>
+        </div>
+
+        <!-- Two-column Categories Grid -->
+        <div id="techGrid" class="tech-grid" style="display: none;">
+          <!-- Dynamically populated 2-column category blocks -->
+        </div>
+      </section>
+
+      <!-- 2. MORE INFO VIEW -->
+      <section id="moreInfoView" class="view-panel" style="display: none;">
+        <div class="info-brand-banner">
+          <div class="info-brand-logo-wrap">
+            <svg viewBox="0 0 32 32" fill="none" class="info-brand-svg" width="28" height="28">
+              <path d="M16 2L30 10V22L16 30L2 22V10L16 2Z" fill="#ffffff" />
+              <path d="M16 5L27 11.5V20.5L16 27L5 20.5V11.5L16 5Z" fill="#490899" />
+              <path d="M10 12L13 21L16 14L19 21L22 12" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="info-brand-details">
+            <div class="info-brand-title">Detect Web Technology</div>
+            <div class="info-brand-desc">Fast, private &amp; local technology stack detector</div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-row">
+            <span class="info-label">Website</span>
+            <span class="info-value font-mono" id="infoHostname">-</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Total Identified</span>
+            <span class="info-value bold" id="infoTotalTechs">0 technologies</span>
+          </div>
+        </div>
+
+        <!-- 3. Creator Profile Card -->
+        <div class="creator-card">
+          <div class="creator-location">
+            <span class="location-dot"></span>
+            <span>Based in Helsinki, Finland</span>
+          </div>
+
+          <h2 class="creator-name">
+            SAHED ALOM <span class="creator-highlight">SUMIT<span class="pulse-dot">.</span></span>
+          </h2>
+
+          <div class="creator-role-wrap">
+            <span class="creator-role">UI/UX Designer & Low-code Web Developer</span>
+          </div>
+
+          <p class="creator-bio">
+            &ldquo;Your website problem becomes my problem the moment you share it. I don&apos;t stop until it&apos;s solved—that&apos;s how I&apos;m wired. That&apos;s why I call this my passion, not my job.&rdquo;
+          </p>
+
+          <div class="creator-actions">
+            <a
+              href="https://sahedalomsumit.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="creator-portfolio-btn"
+            >
+              <span>https://sahedalomsumit.com</span>
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Sticky Footer on Both Screens -->
+    <footer class="app-footer">
+      <a
+        href="https://sahedalomsumit.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="text-decoration: none"
+      >
+        <div
+          class="footer-brand-wrap"
+          style="
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.875rem;
+            color: #aaaaaa;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.25s ease, color 0.25s ease;
+          "
+        >
+          <span>Built with</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="#ef4444"
+            stroke="#ef4444"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="
+              transform-origin: center;
+              flex-shrink: 0;
+              animation: pulseHeart 1.2s infinite ease-in-out;
+            "
+            aria-hidden="true"
+          >
+            <path
+              d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"
+            ></path>
+          </svg>
+          <span>by</span>
+          <span class="footer-author" style="color: var(--primary-purple); font-weight: 700">Sahed</span>
+        </div>
+      </a>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toastNotification" class="toast"></div>
+  </div>
+
+  <script src="../data/technologies.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

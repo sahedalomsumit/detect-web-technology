@@ -51,18 +51,6 @@
     }
   });
 
-  // Inject probe into MAIN world
-  function injectMainWorldProbe() {
-    try {
-      const script = document.createElement('script');
-      script.src = chrome.runtime.getURL('content/injected-probe.js');
-      script.onload = () => script.remove();
-      (document.head || document.documentElement).appendChild(script);
-    } catch (err) {
-      // If CSP blocks inline script tag injection, fallback to standard probing
-    }
-  }
-
   function getMetaTags() {
     const metaList = [];
     const elements = document.querySelectorAll('meta');
@@ -127,7 +115,11 @@
         const entries = window.performance.getEntriesByType('resource');
         for (const entry of entries) {
           if (entry.name) {
-            resources.push(entry.name);
+            const type = entry.initiatorType;
+            // Filter down to script/fetch/xhr/module assets to avoid scanning hundreds of media, font & image URLs
+            if (!type || type === 'script' || type === 'fetch' || type === 'xmlhttprequest' || type === 'other' || /\.(?:js|mjs|json|wasm)(?:[?#]|$)/i.test(entry.name)) {
+              resources.push(entry.name);
+            }
           }
         }
       }
@@ -143,13 +135,17 @@
     return resources;
   }
 
-  function getHtmlSample() {
-    try {
-      // First 350k chars of HTML captures wrappers, builder classes, and scripts
-      return (document.documentElement ? document.documentElement.outerHTML.slice(0, 350000) : '');
-    } catch {
-      return '';
+  let cachedHtmlSample = null;
+  function getLazyHtmlSample() {
+    if (cachedHtmlSample === null) {
+      try {
+        // First 150k chars captures wrappers, builder classes, scripts, and meta tags without massive allocations
+        cachedHtmlSample = document.documentElement ? document.documentElement.outerHTML.slice(0, 150000) : '';
+      } catch {
+        cachedHtmlSample = '';
+      }
     }
+    return cachedHtmlSample;
   }
 
   function runDetection(passedHeaders = null) {
@@ -170,12 +166,12 @@
       return { technologies: [], total: 0, url: window.location.href };
     }
 
+    cachedHtmlSample = null;
     const metaTags = getMetaTags();
     const scripts = getScripts();
     const styles = getStylesheets();
     const iframes = getIframes();
     const resources = getLoadedResources();
-    const htmlSample = getHtmlSample();
     const cookies = document.cookie || '';
 
     const detectedMap = new Map();
@@ -219,6 +215,7 @@
       // 3. Check Script Sources, Iframes & Loaded Bundled Resources
       if (tech.detect.scripts) {
         for (const scriptRule of tech.detect.scripts) {
+          let ruleMatched = false;
           for (const s of scripts) {
             const match = s.match(scriptRule);
             if (match) {
@@ -226,23 +223,29 @@
               if (match[1] && !detectedVersion && /^v?[\d.]+/.test(match[1])) {
                 detectedVersion = match[1].replace(/^v/, '');
               }
+              ruleMatched = true;
               break;
             }
           }
-          for (const ifr of iframes) {
-            if (scriptRule.test(ifr)) {
-              detectionMatches.push('Iframe Embed');
-              break;
-            }
-          }
-          for (const res of resources) {
-            const match = res.match(scriptRule);
-            if (match) {
-              detectionMatches.push('Bundled Module/Resource');
-              if (match[1] && !detectedVersion && /^v?[\d.]+/.test(match[1])) {
-                detectedVersion = match[1].replace(/^v/, '');
+          if (!ruleMatched) {
+            for (const ifr of iframes) {
+              if (scriptRule.test(ifr)) {
+                detectionMatches.push('Iframe Embed');
+                ruleMatched = true;
+                break;
               }
-              break;
+            }
+          }
+          if (!ruleMatched) {
+            for (const res of resources) {
+              const match = res.match(scriptRule);
+              if (match) {
+                detectionMatches.push('Bundled Module/Resource');
+                if (match[1] && !detectedVersion && /^v?[\d.]+/.test(match[1])) {
+                  detectedVersion = match[1].replace(/^v/, '');
+                }
+                break;
+              }
             }
           }
         }
@@ -260,8 +263,9 @@
         }
       }
 
-      // 5. Check HTML structure
+      // 5. Check HTML structure (lazily retrieved)
       if (tech.detect.html) {
+        const htmlSample = getLazyHtmlSample();
         for (const htmlRule of tech.detect.html) {
           const match = htmlSample.match(htmlRule);
           if (match) {
@@ -389,20 +393,19 @@
 
     // Send summary to background for badge update
     try {
-      chrome.runtime.sendMessage({
-        type: 'UPDATE_BADGE_COUNT',
-        count: result.total,
-        url: result.url
-      });
+      if (chrome.runtime?.id) {
+        chrome.runtime.sendMessage({
+          type: 'UPDATE_BADGE_COUNT',
+          count: result.total,
+          url: result.url
+        });
+      }
     } catch {
       // Extension context invalidated or not yet ready
     }
 
     return result;
   }
-
-  // Inject probe
-  injectMainWorldProbe();
 
   // Initial detection
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
@@ -425,11 +428,18 @@
         });
         return false;
       }
+
+      // If detection was run within the last 3 seconds and headers aren't changing it, return cache quickly
+      if (cachedDetection && !message.headers && (Date.now() - new Date(cachedDetection.timestamp).getTime() < 3000)) {
+        sendResponse(cachedDetection);
+        return false;
+      }
+
       window.dispatchEvent(new CustomEvent('__DETECT_WEB_TECH_REQUEST_PROBE__'));
       setTimeout(() => {
         const data = runDetection(message.headers || null);
         sendResponse(data);
-      }, 50);
+      }, 40);
       return true; // Keep channel open for async response
     }
 
@@ -449,7 +459,7 @@
       setTimeout(() => {
         const data = runDetection(message.headers || null);
         sendResponse(data);
-      }, 100);
+      }, 60);
       return true;
     }
   });

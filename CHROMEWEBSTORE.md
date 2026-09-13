@@ -7,15 +7,19 @@ This document is the single source of truth for publishing **Detect Web Technolo
 ## 1. Store Listing Information
 
 ### Extension Name
-`Detect Web Technology - CMS, Framework & Stack Detector`
+
+`Detect Web Technology`
 
 ### Short Description (max 132 chars)
-`Instantly uncover the CMS, JavaScript frameworks, analytics, ecommerce, web servers, and tools powering any website. 1-click copy.`
+
+`Instantly identify CMS, frameworks, eCommerce, analytics, web servers, and tools powering any website in one click.`
 
 ### Category
+
 `Developer Tools`
 
 ### Language
+
 `English`
 
 ---
@@ -23,9 +27,9 @@ This document is the single source of truth for publishing **Detect Web Technolo
 ## 2. Detailed Store Description
 
 ```markdown
-🔍 Detect Web Technology is a powerful, lightweight website profiler that reveals what websites are built with in real time.
+🔍 Detect Web Technology — Instantly identify CMS, frameworks, eCommerce, analytics, web servers, and tools powering any website in one click.
 
-Find out what CMS a website is using, as well as its frontend framework, eCommerce engine, JavaScript libraries, analytics trackers, CDN, web server, and more.
+Detect Web Technology is a high-accuracy, lightweight website profiler that reveals what websites are built with in real time.
 
 🚀 Key Features:
 
@@ -47,14 +51,14 @@ Whether you are a developer, designer, researcher, SEO specialist, or tech enthu
 
 ## 3. Permissions Justifications
 
-| Permission | Technical Reason & User Benefit |
-|---|---|
-| `activeTab` | Required to scan the DOM, scripts, stylesheets, and meta tags of the currently active tab when the user opens the extension popup. |
-| `scripting` | Required to inject the lightweight technology detection script into web pages that were opened before the extension was loaded. |
-| `storage` | Used locally to store the user's preferred theme (Dark/Light mode) and session-level header detections. |
-| `tabs` | Needed to retrieve the current tab URL and hostname so technologies can be associated with the active website. |
-| `webRequest` | Used to inspect response headers (`Server`, `X-Powered-By`, `CF-Ray`, `Via`) to identify server technology, CDNs, and backend frameworks. |
-| `host_permissions` (`http://*/*`, `https://*/*`) | Allows the detector to inspect and analyze technology stacks on any visited web page upon user request. |
+| Permission                                       | Technical Reason & User Benefit                                                                                                           |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `activeTab`                                      | Required to scan the DOM, scripts, stylesheets, and meta tags of the currently active tab when the user opens the extension popup.        |
+| `scripting`                                      | Required to inject the lightweight technology detection script into web pages that were opened before the extension was loaded.           |
+| `storage`                                        | Used locally to store the user's preferred theme (Dark/Light mode) and session-level header detections.                                   |
+| `tabs`                                           | Needed to retrieve the current tab URL and hostname so technologies can be associated with the active website.                            |
+| `webRequest`                                     | Used to inspect response headers (`Server`, `X-Powered-By`, `CF-Ray`, `Via`) to identify server technology, CDNs, and backend frameworks. |
+| `host_permissions` (`http://*/*`, `https://*/*`) | Allows the detector to inspect and analyze technology stacks on any visited web page upon user request.                                   |
 
 ---
 
@@ -65,6 +69,7 @@ Whether you are a developer, designer, researcher, SEO specialist, or tech enthu
 - **Does this extension sell or monetize personal information?** No.
 
 ### Official Privacy Policy Template
+
 > **Privacy Policy for Detect Web Technology**
 > Detect Web Technology ("the Extension") is committed to protecting your privacy. The Extension does not collect, record, track, transmit, or sell any personal information or web browsing history. All technology detection analysis is executed purely client-side on your local device.
 
@@ -77,3 +82,15 @@ Whether you are a developer, designer, researcher, SEO specialist, or tech enthu
 - [x] **Icon 48×48px**: `icons/icon-48.png`
 - [x] **Icon 128×128px**: `icons/icon-128.png`
 - [ ] **Store Screenshots**: 1280×800 or 640×400 (Take screenshots of popup in Dark and Light mode on popular websites).
+
+---
+
+## 6. Version History
+
+### Version 1.0.0 (Initial Production Release)
+
+- **180+ Technology Signatures**: Multi-vector engine for Frameworks, CMS, Analytics, E-Commerce, CDN, Web Servers, and Payments.
+- **Manifest V3 Compliant**: Native `world: "MAIN"` content script probing for JavaScript globals, service worker background script, and session storage.
+- **Performance Optimized**: Sub-40ms execution time, lazy HTML DOM evaluation, resource request filtering, and DocumentFragment batch rendering.
+- **Privacy Hardened**: Zero web-accessible resources exposed, preventing website fingerprinting. 100% client-side execution with zero external network tracking.
+- **Modern UI**: Two-column category bento grid, dark & light mode, brand SVG icons, and 1-click Markdown stack exporter.

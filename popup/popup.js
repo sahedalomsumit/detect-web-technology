@@ -10,7 +10,7 @@
   let currentTechnologies = [];
   let currentHeaders = {};
   let currentTabInfo = { url: '', hostname: '', title: '' };
-  let currentTheme = 'light';
+  let currentTheme = 'dark';
   let isScannerActive = true;
   let activeTab = 'technologies';
   let filterText = '';
@@ -125,7 +125,17 @@
     'google-for-woocommerce': `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#96588a"/><circle cx="12" cy="12" r="6" fill="#4285F4"/></svg>`,
     'unpkg': `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#202A36"/><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" stroke="#ffffff" stroke-width="1.5" fill="none"/></svg>`,
     'jsdelivr': `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#E84D3D"/><path d="M12 4l7 4v8l-7 4-7-4V8l7-4z" fill="#ffffff"/></svg>`,
-    'cdnjs': `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#D9643A"/><text x="12" y="16" fill="#ffffff" font-size="8" font-weight="bold" text-anchor="middle">CDN</text></svg>`
+    'cdnjs': `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#D9643A"/><text x="12" y="16" fill="#ffffff" font-size="8" font-weight="bold" text-anchor="middle">CDN</text></svg>`,
+    'astro': `<svg viewBox="0 0 24 24"><path d="M8.5 19.5c.3-1.8 1.5-3.2 3.5-3.5 2 .3 3.2 1.7 3.5 3.5-1.5-.5-2.5-.5-3.5 0-1-.5-2-.5-3.5 0z" fill="#FF5D01"/><path d="M12 2.5L5.5 18h3.3l1.7-4.5h3l1.7 4.5h3.3L12 2.5zm-.5 7.5l.5-1.8.5 1.8h-1z" fill="#BC52EE"/></svg>`,
+    'remix': `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#000000"/><path d="M6 6h6a3 3 0 0 1 3 3c0 1.2-.7 2.2-1.8 2.7L18 18h-3.5l-4-5.5H8.5V18H6V6zm2.5 4.5h3.5a1 1 0 0 0 0-2H8.5v2z" fill="#ffffff"/></svg>`,
+    'vite': `<svg viewBox="0 0 24 24"><path d="M21.5 4.5l-9.2 16.3c-.2.4-.8.4-1 0L2.5 4.5c-.3-.5.1-1.1.7-1l7.8 1.5c.2 0 .4 0 .5-.2L14.7 2c.4-.4 1-.2 1.1.3l.9 4.3 4.1.8c.6.1.9.8.7 1.4z" fill="#646CFF"/><path d="M12.8 3.5l-4 7.5h3.5l-2.5 6 6-8h-3.5l2.5-5.5h-2z" fill="#FFD62E"/></svg>`,
+    'vercel': `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#000000"/><polygon points="12,4 21,20 3,20" fill="#ffffff"/></svg>`,
+    'fastly': `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#FF282D"/><text x="12" y="16" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">f</text></svg>`,
+    'webflow': `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#146EF5"/><path d="M19 8.5l-3.5 7.5h-2.5l2-4.5h-3l2-4.5h-2.5l-2.5 5.5h-2.5L9 8.5H6.5L3.5 16h2.5l1.5-3.5h2l-1.5 3.5h5l3.5-7.5H19z" fill="#ffffff"/></svg>`,
+    'ghost': `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#15171A"/><path d="M12 4a6 6 0 0 0-6 6v7.5l2-1.5 2 1.5 2-1.5 2 1.5 2-1.5 2 1.5V10a6 6 0 0 0-6-6zm-2 5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm4 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z" fill="#ffffff"/></svg>`,
+    'drupal': `<svg viewBox="0 0 24 24"><path d="M12 2C8 7 6 10 6 13.5a6 6 0 0 0 12 0C18 10 16 7 12 2zm0 15a3.5 3.5 0 0 1-3.5-3.5c0-1.5 1-3 3.5-5.5 2.5 2.5 3.5 4 3.5 5.5A3.5 3.5 0 0 1 12 17z" fill="#0678BE"/></svg>`,
+    'strapi': `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#4945FF"/><path d="M6 7l6-4 6 4v10l-6 4-6-4V7z" fill="#ffffff"/><path d="M12 5.5l4.5 3v6l-4.5 3-4.5-3v-6l4.5-3z" fill="#4945FF"/></svg>`,
+    'contentful': `<svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#2478CC"/><circle cx="12" cy="8" r="3" fill="#ffffff"/><circle cx="8" cy="15" r="3" fill="#F44336"/><circle cx="16" cy="15" r="3" fill="#FFC107"/></svg>`
   };
 
   // Generic Category SVG Fallbacks
@@ -159,6 +169,8 @@
       const stored = await chrome.storage.local.get(['theme', 'scannerEnabled']);
       if (stored.theme) {
         currentTheme = stored.theme;
+      } else {
+        currentTheme = 'dark';
       }
       if (stored.scannerEnabled !== undefined) {
         isScannerActive = Boolean(stored.scannerEnabled);
@@ -166,7 +178,7 @@
         isScannerActive = true;
       }
     } catch {
-      currentTheme = 'light';
+      currentTheme = 'dark';
       isScannerActive = true;
     }
     document.documentElement.setAttribute('data-theme', currentTheme);
@@ -330,9 +342,9 @@
         currentHeaders = {};
       }
 
-      // 1b. Fallback: If headers are empty or missing 'server', fetch directly
+      // 1b. Fallback: If response headers were not captured by webRequest, attempt direct HEAD
       if (tab.url && (tab.url.startsWith('http://') || tab.url.startsWith('https://'))) {
-        if (!currentHeaders || Object.keys(currentHeaders).length === 0 || !currentHeaders.server) {
+        if (!currentHeaders || Object.keys(currentHeaders).length === 0) {
           try {
             const headRes = await fetch(tab.url, { method: 'HEAD', cache: 'no-cache' });
             for (const [k, v] of headRes.headers.entries()) {
@@ -344,7 +356,7 @@
           } catch (e) {
             try {
               const controller = new AbortController();
-              const timer = setTimeout(() => controller.abort(), 2000);
+              const timer = setTimeout(() => controller.abort(), 1500);
               const getRes = await fetch(tab.url, {
                 method: 'GET',
                 headers: { 'Range': 'bytes=0-0' },
@@ -517,6 +529,7 @@
     }
 
     techGrid.innerHTML = '';
+    const fragment = document.createDocumentFragment();
 
     for (const [categoryName, items] of Object.entries(grouped)) {
       const groupDiv = document.createElement('div');
@@ -557,9 +570,10 @@
       }
 
       groupDiv.appendChild(itemsList);
-      techGrid.appendChild(groupDiv);
+      fragment.appendChild(groupDiv);
     }
 
+    techGrid.appendChild(fragment);
     showContent();
   }
 

@@ -38,23 +38,28 @@ chrome.tabs.onRemoved.addListener(async (tabId) => {
   }
 });
 
-// Update badge count
+// Update badge count or retrieve headers
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'UPDATE_BADGE_COUNT') {
     const tabId = sender.tab?.id || message.tabId;
     if (tabId) {
-      chrome.storage.local.get('scannerEnabled', (data) => {
-        if (data && data.scannerEnabled === false) {
-          chrome.action.setBadgeText({ tabId, text: '' });
-        } else {
-          const text = message.count > 0 ? String(message.count) : '';
-          chrome.action.setBadgeText({ tabId, text });
-          chrome.action.setBadgeBackgroundColor({ tabId, color: '#8b5cf6' });
+      (async () => {
+        try {
+          const data = await chrome.storage.local.get('scannerEnabled');
+          if (data && data.scannerEnabled === false) {
+            await chrome.action.setBadgeText({ tabId, text: '' });
+          } else {
+            const text = message.count > 0 ? String(message.count) : '';
+            await chrome.action.setBadgeText({ tabId, text });
+            await chrome.action.setBadgeBackgroundColor({ tabId, color: '#8b5cf6' });
+          }
+        } catch (err) {
+          // Tab or extension context may be closed
         }
-      });
+      })();
     }
     sendResponse({ ok: true });
-    return true;
+    return false;
   }
 
   if (message.type === 'GET_TAB_HEADERS') {
@@ -72,16 +77,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 // Clear badges if scanner is disabled
-chrome.storage.onChanged.addListener((changes, area) => {
+chrome.storage.onChanged.addListener(async (changes, area) => {
   if (area === 'local' && changes.scannerEnabled !== undefined) {
     if (changes.scannerEnabled.newValue === false) {
-      chrome.tabs.query({}, (tabs) => {
+      try {
+        const tabs = await chrome.tabs.query({});
         for (const t of tabs) {
           if (t.id) {
-            chrome.action.setBadgeText({ tabId: t.id, text: '' });
+            await chrome.action.setBadgeText({ tabId: t.id, text: '' });
           }
         }
-      });
+      } catch (err) {
+        // Ignore
+      }
     }
   }
 });

@@ -272,11 +272,12 @@
       }
 
       if (!results.some(r => r.id === 'gsap')) {
-        // Check DOM elements animated by GSAP (_gsap cache object or _gsTransform)
-        const candidates = document.querySelectorAll('[style*="transform"], [style*="translate"], [style*="rotate"], [style*="scale"], [style*="opacity"], [data-scroll], [data-gsap], div, section, main, h1, h2, p, a, button');
-        for (let i = 0; i < Math.min(candidates.length, 100); i++) {
+        // Targeted check for DOM elements animated by GSAP (_gsap cache object or _gsTransform)
+        const candidates = document.querySelectorAll('[data-gsap], [data-scroll], [style*="transform"], [style*="translate"]');
+        const limit = Math.min(candidates.length, 25);
+        for (let i = 0; i < limit; i++) {
           const el = candidates[i];
-          if (el._gsap || el._gsTransform) {
+          if (el && (el._gsap || el._gsTransform)) {
             const ver = el._gsap && el._gsap.version ? String(el._gsap.version) : null;
             results.push({ id: 'gsap', property: 'element._gsap', version: ver });
             break;

@@ -4,26 +4,26 @@
  */
 
 :root {
-  /* Light Mode (Default) */
-  --header-bg: #490899;
+  /* Dark Mode (Default) */
+  --header-bg: #270553;
   --header-text: #ffffff;
-  --bg-page: #ffffff;
-  --bg-card: #f9fafb;
-  --border-subtle: #e5e7eb;
-  --text-main: #111827;
-  --text-muted: #6b7280;
-  --text-faint: #9ca3af;
-  --primary-purple: #490899;
-  --primary-purple-hover: #3b067c;
-  --primary-purple-light: #f3e8ff;
-  --primary-purple-text: #6b21a8;
-  --link-color: #490899;
-  --scrollbar-thumb: #d1d5db;
-  --scrollbar-thumb-hover: #490899;
-  --confidence-bg: #f3e8ff;
-  --confidence-text: #6b21a8;
-  --badge-version: #6b7280;
-  --switch-track: rgba(255, 255, 255, 0.3);
+  --bg-page: #101015;
+  --bg-card: #181820;
+  --border-subtle: #272732;
+  --text-main: #f3f4f6;
+  --text-muted: #9ca3af;
+  --text-faint: #6b7280;
+  --primary-purple: #a855f7;
+  --primary-purple-hover: #c084fc;
+  --primary-purple-light: rgba(168, 85, 247, 0.15);
+  --primary-purple-text: #d8b4fe;
+  --link-color: #c084fc;
+  --scrollbar-thumb: #374151;
+  --scrollbar-thumb-hover: #a855f7;
+  --confidence-bg: rgba(168, 85, 247, 0.15);
+  --confidence-text: #d8b4fe;
+  --badge-version: #9ca3af;
+  --switch-track: rgba(255, 255, 255, 0.2);
   --switch-thumb: #ffffff;
 }
 
@@ -48,6 +48,30 @@
   --confidence-text: #d8b4fe;
   --badge-version: #9ca3af;
   --switch-track: rgba(255, 255, 255, 0.2);
+  --switch-thumb: #ffffff;
+}
+
+[data-theme="light"] {
+  /* Light Mode */
+  --header-bg: #490899;
+  --header-text: #ffffff;
+  --bg-page: #ffffff;
+  --bg-card: #f9fafb;
+  --border-subtle: #e5e7eb;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --text-faint: #9ca3af;
+  --primary-purple: #490899;
+  --primary-purple-hover: #3b067c;
+  --primary-purple-light: #f3e8ff;
+  --primary-purple-text: #6b21a8;
+  --link-color: #490899;
+  --scrollbar-thumb: #d1d5db;
+  --scrollbar-thumb-hover: #490899;
+  --confidence-bg: #f3e8ff;
+  --confidence-text: #6b21a8;
+  --badge-version: #6b7280;
+  --switch-track: rgba(255, 255, 255, 0.3);
   --switch-thumb: #ffffff;
 }
 

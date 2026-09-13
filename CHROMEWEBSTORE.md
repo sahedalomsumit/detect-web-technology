@@ -12,7 +12,7 @@ This document is the single source of truth for publishing **Detect Web Technolo
 
 ### Short Description (max 132 chars)
 
-`Instantly detect website technologies with 1 click: CDN, CMS, frameworks, eCommerce, libraries, plugins, themes, web servers, and more.`
+`Instantly detect website technologies with 1 click: CMS, CDN, frameworks, eCommerce, libraries, plugins, themes, web servers, and more.`
 
 ### Category
 
@@ -27,7 +27,7 @@ This document is the single source of truth for publishing **Detect Web Technolo
 ## 2. Detailed Store Description
 
 ```markdown
-🔍 Detect Web Technology — Instantly detect website technologies with 1 click: CDN, CMS, frameworks, eCommerce, libraries, plugins, themes, web servers, and more.
+🔍 Detect Web Technology — Instantly detect website technologies with 1 click: CMS, CDN, frameworks, eCommerce, libraries, plugins, themes, web servers, and more.
 
 Detect Web Technology is a high-accuracy, lightweight website profiler that reveals what websites are built with in real time.
 

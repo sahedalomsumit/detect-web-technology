@@ -36,8 +36,6 @@
   const toastNotification = document.getElementById('toastNotification');
 
   // More Info Elements
-  const infoHostname = document.getElementById('infoHostname');
-  const infoTotalTechs = document.getElementById('infoTotalTechs');
   const appVersion = document.getElementById('appVersion');
 
   // Brand SVG Icons
@@ -596,12 +594,7 @@
   // Render More Info View
   // ==========================================
   function renderMoreInfo() {
-    infoHostname.textContent = currentTabInfo.hostname || '-';
-    if (!isScannerActive) {
-      infoTotalTechs.textContent = 'Scanner paused';
-    } else {
-      infoTotalTechs.textContent = `${currentTechnologies.length} technologies identified`;
-    }
+    // Version and brand details are statically set and dynamic via initAppVersion()
   }
 
   // ==========================================

@@ -5,7 +5,7 @@
 <h1 align="center">Detect Web Technology</h1>
 
 <p align="center">
-  <strong>Instantly identify CMS, frameworks, eCommerce, analytics, web servers, and tools powering any website in one click.</strong>
+  <strong>A lightweight extension that instantly detects the technologies powering any website with 1 click — including CDN, CMS, frameworks, eCommerce, libraries, plugins, themes, web servers, and more.  </strong>
 </p>
 
 <p align="center">

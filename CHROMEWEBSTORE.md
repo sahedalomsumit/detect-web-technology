@@ -12,7 +12,7 @@ This document is the single source of truth for publishing **Detect Web Technolo
 
 ### Short Description (max 132 chars)
 
-`Instantly identify CMS, frameworks, eCommerce, analytics, web servers, and tools powering any website in one click.`
+`A lightweight extension that instantly detects the technologies powering any website with 1 click — including CDN, CMS, frameworks, eCommerce, libraries, plugins, themes, web servers, and more.  `
 
 ### Category
 
@@ -27,7 +27,7 @@ This document is the single source of truth for publishing **Detect Web Technolo
 ## 2. Detailed Store Description
 
 ```markdown
-🔍 Detect Web Technology — Instantly identify CMS, frameworks, eCommerce, analytics, web servers, and tools powering any website in one click.
+🔍 Detect Web Technology — A lightweight extension that instantly detects the technologies powering any website with 1 click — including CDN, CMS, frameworks, eCommerce, libraries, plugins, themes, web servers, and more.
 
 Detect Web Technology is a high-accuracy, lightweight website profiler that reveals what websites are built with in real time.
 
